@@ -13,6 +13,8 @@ const Card = (props) => {
 
 // Passing data trought one data object to the card component using the "SPREAD OPERATOR"
 const CardList = (props) => {
+	/** Another alternative to pass properties to the component without the spread operator **/
+	/*{props.cards.map(card => <Card name={card.name} avatar_url={card.avatar_url} company={card.company}/>)}*/
 	return(
   <div>
   	{props.cards.map(card => <Card {... card}/>)}

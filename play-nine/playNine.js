@@ -1,11 +1,18 @@
 
 const Stars = (props) => {
+	
+  /* Random stars number */
+  const numberOfStars = 1 + Math.floor(Math.random()*9);
+  
+  let stars = [];
+  
+  for(let i =0; i<numberOfStars; i++){
+  	stars.push(<li key={i} className="fa fa-star"></li>);
+  }
+		   
   return(
     <div className="col-5">
-      <li className="fa fa-star"></li>
-      <li className="fa fa-star"></li>
-      <li className="fa fa-star"></li>
-      <li className="fa fa-star"></li>
+      {stars}
     </div>
   );
 }

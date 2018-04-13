@@ -1,22 +1,26 @@
-
+/** Stars function component **/
 const Stars = (props) => {
 	
   /* Random stars number */
   const numberOfStars = 1 + Math.floor(Math.random()*9);
   
-  let stars = [];
+  /** Old way to do it*/
+  /*let stars = [];
   
   for(let i =0; i<numberOfStars; i++){
   	stars.push(<li key={i} className="fa fa-star"></li>);
-  }
+  }*/
 		   
   return(
     <div className="col-5">
-      {stars}
+    	{_.range(numberOfStars).map((number, i) =>
+      		<li key={i} className="fa fa-star"></li>
+      )}
     </div>
   );
 }
-
+	
+/** Button function component **/
 const Button = (props) => {
   return(
     <div className="col-2">
@@ -25,27 +29,33 @@ const Button = (props) => {
   );
 }
 
+/** Answer function component **/
 const Answer = (props) => {
   return(
     <div className="col-5">
-      ...
+      <span>5</span>
+      <span>6</span>
     </div>
   );
 }
-
+/** Numbers function component **/
 const Numbers = (props) => {
+
   return(
     <div className="container">
       <div className="card text-center">
         <div>
-          <span>1</span>
-          <span className="selected">2</span>
-          <span className="used">3</span>
+	  {Numbers.list.map((number, i) => 
+	  	<span key={i}> {number} </span>
+	  )}
         </div>        
       </div>
     </div>
   );
 }
+
+// Global variable to be used in any component
+Numbers.list =  _.range(1, 10);
 
 /* Game component Class */
 class Game extends React.Component{

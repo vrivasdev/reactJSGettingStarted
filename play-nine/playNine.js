@@ -68,10 +68,6 @@ class Game extends React.Component{
 	// Selected numbers
   	state = {
   		selectedNumbers: [2, 4]
-	}
-	// Selected numbers
-  	state = {
-  		selectedNumbers: [2, 4]
   	}
 	
 	render(){

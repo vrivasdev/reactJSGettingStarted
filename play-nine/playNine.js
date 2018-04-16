@@ -1,3 +1,9 @@
+/**
+ * Author: Víctor Rivas
+ * email: victor.rivas.sistemas@gmail.com
+ * Description: Play nine game React JS components 
+ **/
+
 /** Stars function component **/
 const Stars = (props) => {		   
   return(

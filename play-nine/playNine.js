@@ -1,9 +1,3 @@
-/**
- * Author: Víctor Rivas
- * email: victor.rivas.sistemas@gmail.com
- * Description: Play nine game React JS components 
- **/
-
 /** Stars function component **/
 const Stars = (props) => {		   
   return(
@@ -17,9 +11,24 @@ const Stars = (props) => {
 	
 /** Button function component **/
 const Button = (props) => {
+
+  let button;
+  
+	switch(props.answerIsCorrect){
+  	case true:
+    	button = <button class="btn btn-success"><i className="fa fa-check"></i></button>;
+      break;
+    case false:
+    	button = <button class="btn btn-danger"><i className="fa fa-times"></i></button>;
+    	break;
+    default:
+    	button = <button class="btn" disabled={props.selectedNumbers.length == 0} onClick={props.checkAnswer}>=</button>;
+    	break;
+  }
+  
   return(
     <div className="col-2">
-      <button class="btn" disabled={props.selectedNumbers.length == 0}>=</button>
+      {button}
     </div>
   );
 }
@@ -64,7 +73,8 @@ class Game extends React.Component{
 	// Selected numbers
   state = {
   		selectedNumbers: [],
-      numberOfStars  : 1 + Math.floor(Math.random()*9)
+      numberOfStars  : 1 + Math.floor(Math.random()*9),
+      answerIsCorrect: null
 	}
   /* Select a number from the list */
   selectNumber = (clickedNumber) => {
@@ -82,17 +92,25 @@ class Game extends React.Component{
       	selectedNumbers: prevState.selectedNumbers.filter(number => number !== clickedNumber)
       }));
   }
+  /* It compares the total of answers with the random stars */
+  checkAnswer = () => {    
+  	this.setState(prevState => ({
+    		answerIsCorrect: prevState.numberOfStars === prevState.selectedNumbers.reduce((acc, num) => acc + num, 0)
+    }));
+  }
   
 	render(){
-  
-  	const { selectedNumbers, numberOfStars } = this.state;
+  	const { 
+    	selectedNumbers, 
+      numberOfStars, 
+      answerIsCorrect } = this.state;
     
 		return(
     		<div>
   	  		<h3> Play Nine </h3>
         		<div className="row">
 				<Stars numberOfStars={numberOfStars}/>
-				<Button selectedNumbers={selectedNumbers}/>
+				<Button selectedNumbers={selectedNumbers} checkAnswer={this.checkAnswer} answerIsCorrect={answerIsCorrect}/>
 				<Answer selectedNumbers={selectedNumbers} unselectNumber={this.unselectNumber}/>
         		</div>  
         		<br/>

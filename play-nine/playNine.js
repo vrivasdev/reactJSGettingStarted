@@ -1,19 +1,8 @@
 /** Stars function component **/
-const Stars = (props) => {
-	
-  /* Random stars number */
-  const numberOfStars = 1 + Math.floor(Math.random()*9);
-  
-  /** Old way to do it*/
-  /*let stars = [];
-  
-  for(let i =0; i<numberOfStars; i++){
-  	stars.push(<li key={i} className="fa fa-star"></li>);
-  }*/
-		   
+const Stars = (props) => {		   
   return(
     <div className="col-5">
-    	{_.range(numberOfStars).map((number, i) =>
+    	{_.range(props.numberOfStars).map((number, i) =>
       		<li key={i} className="fa fa-star"></li>
       )}
     </div>
@@ -51,7 +40,7 @@ const Numbers = (props) => {
     <div className="container">
       <div className="card text-center">
         <div>
-	  {Numbers.list.map((number, i) =>         	
+        	{Numbers.list.map((number, i) =>         	
         	<span key={i} className={numberClassName(number)}
                 onClick={() => props.selectNumber(number)}> {number} </span>
           )}
@@ -68,12 +57,16 @@ Numbers.list =  _.range(1, 10);
 class Game extends React.Component{
 	// Selected numbers
   state = {
-  		selectedNumbers: []
+  		selectedNumbers: [],
+      numberOfStars  : 1 + Math.floor(Math.random()*9)
 	}
   
   selectNumber = (clickedNumber) => {
+  		/** If the number was already selected **/
+  		if (this.state.selectedNumbers.indexOf(clickedNumber) >= 0) return;
+      
   		this.setState(prevState => ({
-      	selectedNumbers: prevState.selectedNumbers.concat(clickedNumber)
+      	selectedNumbers: prevState.selectedNumbers.concat(clickedNumber)        
       }));
   }
   
@@ -82,7 +75,7 @@ class Game extends React.Component{
     		<div>
   	  		<h3> Play Nine </h3>
         		<div className="row">
-				<Stars />
+				<Stars numberOfStars={this.state.numberOfStars}/>
 				<Button />
 				<Answer selectedNumbers={this.state.selectedNumbers}/>
         		</div>  

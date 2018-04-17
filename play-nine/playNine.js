@@ -4,6 +4,14 @@
  * Description: Play nine game React JS components 		
  **/	
  
+const DoneFrame = (props) => {
+		return(
+    		<div class="text-center">
+    		  <h2>{props.doneStatus}</h2>
+    		</div>
+    );
+}
+
 /** Stars function component **/
 const Stars = (props) => {		   
   return(
@@ -87,7 +95,8 @@ class Game extends React.Component{
       numberOfStars  : 1 + Math.floor(Math.random()*9),
       answerIsCorrect: null,
       usedNumbers: [],
-      redraws: 5
+      redraws: 5,
+      doneStatus: 'Game Over!', // doneStatus: null
 	}
   /* Select a number from the list */
   selectNumber = (clickedNumber) => {
@@ -141,7 +150,8 @@ class Game extends React.Component{
       numberOfStars, 
       answerIsCorrect,
       usedNumbers,
-      redraws} 
+      redraws,
+      doneStatus} 
     = this.state;
     
 		return(
@@ -160,7 +170,10 @@ class Game extends React.Component{
 							<Answer selectedNumbers={selectedNumbers} unselectNumber={this.unselectNumber}/>
         		</div>  
         		<br/>
-        		<Numbers selectedNumbers={selectedNumbers} selectNumber={this.selectNumber} usedNumbers={usedNumbers}/>
+            {doneStatus?
+            	<DoneFrame doneStatus={doneStatus} />:
+              <Numbers selectedNumbers={selectedNumbers} selectNumber={this.selectNumber} usedNumbers={usedNumbers}/>
+            }
   			</div>
     		);
   	}

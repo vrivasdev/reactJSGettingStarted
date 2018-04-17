@@ -89,15 +89,19 @@ Numbers.list =  _.range(1, 10);
 
 /* Game component Class */
 class Game extends React.Component{
+	/** Generate random number for the stars **/
+	static randomNumber = () => 1 + Math.floor(Math.random()*9);
+  
 	// Selected numbers
   state = {
   		selectedNumbers: [],
-      numberOfStars  : 1 + Math.floor(Math.random()*9),
+      numberOfStars  : Game.randomNumber(),
       answerIsCorrect: null,
       usedNumbers: [],
       redraws: 5,
       doneStatus: 'Game Over!', // doneStatus: null
 	}
+  
   /* Select a number from the list */
   selectNumber = (clickedNumber) => {
   		/** If the number was already selected **/
@@ -128,7 +132,7 @@ class Game extends React.Component{
     		usedNumbers: prevState.usedNumbers.concat(prevState.selectedNumbers),
         selectedNumbers: [],
         answerIsCorrect: null,
-        numberOfStars  : 1 + Math.floor(Math.random()*9),
+        numberOfStars  : Game.randomNumber(),
     }));
   }
   /* Decrement the number of redraw oportunities and restart states */
@@ -137,7 +141,7 @@ class Game extends React.Component{
     if (this.state.redraws <= 0) return;
     
   	this.setState(prevState => ({
-    		numberOfStars  : 1 + Math.floor(Math.random()*9),
+    		numberOfStars  : Game.randomNumber(),
         selectedNumbers: [],
         answerIsCorrect: null,
         redraws: prevState.redraws - 1,

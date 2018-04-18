@@ -3,11 +3,29 @@
  * email: victor.rivas.sistemas@gmail.com		
  * Description: Play nine game React JS components 		
  **/	
+var possibleCombinationSum = function(arr, n) {
+  if (arr.indexOf(n) >= 0) { return true; }
+  if (arr[0] > n) { return false; }
+  if (arr[arr.length - 1] > n) {
+    arr.pop();
+    return possibleCombinationSum(arr, n);
+  }
+  var listSize = arr.length, combinationsCount = (1 << listSize)
+  for (var i = 1; i < combinationsCount ; i++ ) {
+    var combinationSum = 0;
+    for (var j=0 ; j < listSize ; j++) {
+      if (i & (1 << j)) { combinationSum += arr[j]; }
+    }
+    if (n === combinationSum) { return true; }
+  }
+  return false;
+};
  
 const DoneFrame = (props) => {
 		return(
     		<div class="text-center">
     		  <h2>{props.doneStatus}</h2>
+          <button className="btn btn-secondary" onClick={props.resetGame}>Play again</button>
     		</div>
     );
 }
@@ -92,15 +110,17 @@ class Game extends React.Component{
 	/** Generate random number for the stars **/
 	static randomNumber = () => 1 + Math.floor(Math.random()*9);
   
-	// Selected numbers
-  state = {
+  static initialState = () => ({
   		selectedNumbers: [],
       numberOfStars  : Game.randomNumber(),
       answerIsCorrect: null,
       usedNumbers: [],
       redraws: 5,
-      doneStatus: 'Game Over!', // doneStatus: null
-	}
+      doneStatus: null, // doneStatus: null
+  });
+  
+	// Selected numbers
+  state = Game.initialState();
   
   /* Select a number from the list */
   selectNumber = (clickedNumber) => {
@@ -133,7 +153,7 @@ class Game extends React.Component{
         selectedNumbers: [],
         answerIsCorrect: null,
         numberOfStars  : Game.randomNumber(),
-    }));
+    }), this.updateDoneStatus);
   }
   /* Decrement the number of redraw oportunities and restart states */
   redraw = () => {
@@ -145,7 +165,41 @@ class Game extends React.Component{
         selectedNumbers: [],
         answerIsCorrect: null,
         redraws: prevState.redraws - 1,
-    }));
+    }), this.updateDoneStatus);
+  }
+  
+  possibleCombinationSum = (arr, n) => {
+      if (arr.indexOf(n) >= 0) { return true; }
+      if (arr[0] > n) { return false; }
+      if (arr[arr.length - 1] > n) {
+        arr.pop();
+        return possibleCombinationSum(arr, n);
+      }
+      var listSize = arr.length, combinationsCount = (1 << listSize)
+      for (var i = 1; i < combinationsCount ; i++ ) {
+        var combinationSum = 0;
+        for (var j=0 ; j < listSize ; j++) {
+          if (i & (1 << j)) { combinationSum += arr[j]; }
+        }
+        if (n === combinationSum) { return true; }
+      }
+      return false;
+  };
+  /* Throws if there's possible solutions once the refresh number gets into zero value*/
+  possibleSolutions = ({numberOfStars, usedNumbers}) => {
+  		const possibleNumbers = _.range(1, 10).filter(num => usedNumbers.indexOf(num) === - 1);     
+      return this.possibleCombinationSum(possibleNumbers, numberOfStars);
+  }
+  /* If all answers are correct display 'Done Nice!'' message. If there's no possible solutions it'll display 'Game Over'*/
+  updateDoneStatus  = () => {
+  		this.setState(prevState => {             
+      		if (prevState.usedNumbers.length == 9) return { doneStatus: 'Done. Nice!'}              
+          if (prevState.redraws == 0 && !this.possibleSolutions(prevState)) return { doneStatus: 'Game Over!'}          
+      });
+  }
+  /* Reuse the initial state */
+  resetGame = () => {
+  		this.setState(Game.initialState());
   }
   
 	render(){
@@ -157,7 +211,7 @@ class Game extends React.Component{
       redraws,
       doneStatus} 
     = this.state;
-    
+
 		return(
     		<div>
   	  		<h3> Play Nine </h3>
@@ -175,7 +229,7 @@ class Game extends React.Component{
         		</div>  
         		<br/>
             {doneStatus?
-            	<DoneFrame doneStatus={doneStatus} />:
+            	<DoneFrame doneStatus={doneStatus} resetGame={this.resetGame}/>:
               <Numbers selectedNumbers={selectedNumbers} selectNumber={this.selectNumber} usedNumbers={usedNumbers}/>
             }
   			</div>
